@@ -9,6 +9,7 @@ from ykdl.util.match import match1, matchall
 
 import json
 import random
+import time
 from icecream import ic
 
 api_url = 'https://api.live.bilibili.com/room/v1/Room/playUrl?'
@@ -45,7 +46,7 @@ class BiliLive(VideoExtractor):
             api2_data = json.loads(get_content(api2_url.format(self.vid)))
             assert api2_data['code'] == 0, api2_data['msg']
             api2_data = api2_data['data']
-            if api2_data['live_status'] == 1:
+            if api2_data['live_status'] != 1:
                 print(u'主播正在觅食......')
                 time.sleep(60)
             else:    
@@ -93,7 +94,7 @@ class BiliLive(VideoExtractor):
 
         get_live_info()
         info.stream_types = sorted(info.stream_types, key=self.sorted_format.index)
-        ic(info.streams, profile_type)
+        ic(info.streams)
         return info
 
 site = BiliLive()
