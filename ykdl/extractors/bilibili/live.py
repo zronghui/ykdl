@@ -9,6 +9,7 @@ from ykdl.util.match import match1, matchall
 
 import json
 import random
+from icecream import ic
 
 api_url = 'https://api.live.bilibili.com/room/v1/Room/playUrl?'
 api1_url = 'https://api.live.bilibili.com/room/v1/Room/room_init?id={}'
@@ -40,11 +41,16 @@ class BiliLive(VideoExtractor):
             self.logger.debug('Get room ID from API failed: %s', api1_data['msg'])
             self.vid = ID
 
-        api2_data = json.loads(get_content(api2_url.format(self.vid)))
-        assert api2_data['code'] == 0, api2_data['msg']
-        api2_data = api2_data['data']
-        assert api2_data['live_status'] == 1, u'主播正在觅食......'
-        info.title = title = api2_data['title']
+        while True:
+            api2_data = json.loads(get_content(api2_url.format(self.vid)))
+            assert api2_data['code'] == 0, api2_data['msg']
+            api2_data = api2_data['data']
+            if api2_data['live_status'] == 1:
+                print(u'主播正在觅食......')
+                time.sleep(60)
+            else:    
+                info.title = title = api2_data['title']
+                break
 
         api3_data = json.loads(get_content(api3_url.format(self.vid)))
         if api3_data['code'] == 0:
@@ -68,7 +74,7 @@ class BiliLive(VideoExtractor):
             qlt = data['current_qn']
             aqlts = {x['qn']: x['desc'] for x in data['quality_description']}
             size = float('inf')
-            ext = 'flv'
+            ext = 'mp3'
             prf = aqlts[qlt]
             st = self.profile_2_type[prf]
             if urls and st not in info.streams:
@@ -87,6 +93,7 @@ class BiliLive(VideoExtractor):
 
         get_live_info()
         info.stream_types = sorted(info.stream_types, key=self.sorted_format.index)
+        ic(info.streams, profile_type)
         return info
 
 site = BiliLive()

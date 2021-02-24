@@ -189,8 +189,9 @@ def launch_ffmpeg_download(url, name):
             '-y', '-hide_banner',
             '-headers', ''.join('%s: %s\r\n' % x for x in fake_headers.items()),
             '-i', url,
-            '-c', 'copy',
-            '-bsf:a', 'aac_adtstoasc',
+            '-vn',
+            # '-c:a', 'copy',
+            # '-bsf:a', 'aac_adtstoasc',
             name ]
     if os.path.isfile(url):
        cmd[2:2] = ['-protocol_whitelist', 'file,http,https,tls,rtp,tcp,udp,crypto,httpproxy']
