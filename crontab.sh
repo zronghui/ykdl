@@ -12,7 +12,8 @@ watchLive() {
 	url="$1"
 	name="$2"
 	echo $url $name
-	/usr/local/bin/ykdl --format=SD "$url" --output-dir "$name" >> "./log/""$name"".log" &
+	month=`date +"%Y-%m"`
+	/usr/local/bin/ykdl --format=SD "$url" --output-dir "$name/$month" >> "./log/""$name"".log" &
 	sleep 5
 }
 
