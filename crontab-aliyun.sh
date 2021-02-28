@@ -37,3 +37,9 @@ watchLive "https://live.bilibili.com/12607506" "夢冬oTo"
 # # 凌晨 2 点关闭 asmr 录制
 # 0 2 * * * pkill -f ykdl; pkill ffmpeg; pkill -f bili
 
+
+# 在本机
+# # 10 点到 20 点每 3 小时复制服务器录制文件
+# 0 10-20/3 * * * cd '/Volumes/My Passport/data/ut下载/99     直播/哔哩哔哩' && rsync -azvhPu --remove-source-files root@8.136.0.121:/root/bili/ ./
+# -u 忽略已经存在的文件
+# --remove-source-files 备份结束后自动删除源文件
